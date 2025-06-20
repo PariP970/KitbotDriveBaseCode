@@ -1,12 +1,15 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.studica.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,6 +18,7 @@ import frc.robot.Constants.DriveConstants;
 
 
 public class SwerveSubsystem extends SubsystemBase {
+
     
     private final SwerveModule frontLeft = new SwerveModule(
         DriveConstants.kFrontLeftDriveMotorPort,
@@ -54,7 +58,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
 
 
-    private final AHRS gyro = new AHRS(AHRS.NavXComType.kMXP_SPI);  
+
+    public final GenericEntry sb_gyro;
+    public final Pigeon2 pidgey = new Pigeon2(17, "*");
 
 
 
@@ -68,17 +74,22 @@ public class SwerveSubsystem extends SubsystemBase {
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
-                gyro.setAngleAdjustment(0);
                 zeroHeading();
             } catch (Exception e) {
             }
         }).start();
 
+        sb_gyro = Shuffleboard.getTab("Driver")
+        .add("Gyro",0.0)
+        .withPosition(0, 0)
+        .withSize(4,3)
+        .getEntry();
+
     }
 
     public Command zeroHeading() {
         System.out.println("Gyro Reset");
-        return Commands.runOnce(() -> gyro.reset()); // Returns a command to be used on button press
+        return Commands.runOnce(() -> pidgey.reset()); // Returns a command to be used on button press
     }
 
     public ChassisSpeeds getChassisSpeeds() {
@@ -86,14 +97,19 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(DriveConstants.kGyroReversed ? gyro.getAngle() * -1 : gyro.getAngle(), 360);
+        // float angle = m_gyro.getPitch();
+        // double dAngle = angle;
+        return Math.IEEEremainder(DriveConstants.kGyroReversed ? -pidgey.getYaw(true).getValueAsDouble() : pidgey.getYaw(true).getValueAsDouble(), 360);
+        // return (DriveConstants.kGyroReversed ? dAngle * -1 : dAngle);
     }
 
     public Rotation2d getRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
     }
 
-
+    public void periodic(){
+        sb_gyro.setDouble(getHeading());
+    }
 
     public void stopModules() {
         frontLeft.stop();
