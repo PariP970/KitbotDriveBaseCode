@@ -38,7 +38,7 @@ public class ShooterSubsytem extends SubsystemBase {
   
   public ShooterSubsytem() {
     
-    motor = new SparkMax(24, MotorType.kBrushed);
+    motor = new SparkMax(25, MotorType.kBrushed);
     motorConfig = new SparkMaxConfig();
     motorConfig
     .smartCurrentLimit(40);
