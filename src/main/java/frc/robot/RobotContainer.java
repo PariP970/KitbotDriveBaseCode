@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 // ===== Input Devices ===== //
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.EmergencyStopMechanismsCmd;
 
 
@@ -72,9 +73,8 @@ public class RobotContainer {
 
         new JoystickButton(controller, OIConstants.kDriverResetGyroButtonId).onTrue(swerveSubsystem.zeroHeading());
         new JoystickButton(controller, 2).whileTrue(shooterSubsystem.out());
-        new JoystickButton(controller, 2).whileFalse(shooterSubsystem.stop());
-        new JoystickButton(controller, 3).onTrue(shooterSubsystem.in());
-        new JoystickButton(controller, 3).whileFalse(shooterSubsystem.stop());
+        new JoystickButton(controller, 3).whileTrue(shooterSubsystem.in());
+    
 
     
         //new JoystickButton(controller, OIConstants.kDriverStopButtonId).onTrue(new EmergencyStopMechanismsCmd());
