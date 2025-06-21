@@ -73,6 +73,7 @@ public class RobotContainer {
 
         new JoystickButton(controller, OIConstants.kDriverResetGyroButtonId).onTrue(swerveSubsystem.zeroHeading());
         new JoystickButton(controller, 2).whileTrue(shooterSubsystem.out());
+        new JoystickButton(controller, 2).whileFalse(shooterSubsystem.stopCommand());
         new JoystickButton(controller, 3).whileTrue(shooterSubsystem.in());
     
 
