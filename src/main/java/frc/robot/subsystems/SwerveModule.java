@@ -19,6 +19,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 
 public class SwerveModule extends SubsystemBase{
@@ -49,10 +50,12 @@ public class SwerveModule extends SubsystemBase{
         
                 driveMotorConfig.MotorOutput.Inverted = driveMotorReversed ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
                 driveMotorConfig.Feedback.SensorToMechanismRatio = ModuleConstants.kDriveMotorGearRatio;
-              
+                driveMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
                 turningMotorConfig.MotorOutput.Inverted = turningMotorReversed ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
                 turningMotorConfig.Feedback.SensorToMechanismRatio = ModuleConstants.kTurningMotorGearRatio;
-               
+                turningMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
                 turningPidController = new PIDController(ModuleConstants.kPTurning, 0, 0);
                 turningPidController.enableContinuousInput(-Math.PI, Math.PI);
                 
