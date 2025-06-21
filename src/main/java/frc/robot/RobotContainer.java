@@ -23,6 +23,18 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 // ===== Constants ===== //
 import frc.robot.Constants.OIConstants;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.ShooterSubsytem; // IMPORTANT: Import your IntakeSubsystem
+
+/**
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * subsystems, commands, and button mappings) should be declared here.
+ */
+
 
 
 
@@ -34,6 +46,7 @@ public class RobotContainer {
     // Control Inputs
     private final Joystick controller = new Joystick(OIConstants.kOperatorControllerPort);
 
+    private final ShooterSubsytem shooterSubsystem = new ShooterSubsytem();
 
 
     public RobotContainer() {
@@ -58,7 +71,13 @@ public class RobotContainer {
     private void configureBindings() {
 
         new JoystickButton(controller, OIConstants.kDriverResetGyroButtonId).onTrue(swerveSubsystem.zeroHeading());
-        // new JoystickButton(controller, OIConstants.kDriverStopButtonId).onTrue(new EmergencyStopMechanismsCmd());
+        new JoystickButton(controller, 2).whileTrue(shooterSubsystem.out());
+        new JoystickButton(controller, 2).whileFalse(shooterSubsystem.stop());
+        new JoystickButton(controller, 3).onTrue(shooterSubsystem.in());
+        new JoystickButton(controller, 3).whileFalse(shooterSubsystem.stop());
+
+    
+        //new JoystickButton(controller, OIConstants.kDriverStopButtonId).onTrue(new EmergencyStopMechanismsCmd());
     }
 
 
